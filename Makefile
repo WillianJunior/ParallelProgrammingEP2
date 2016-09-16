@@ -1,14 +1,17 @@
 # $(VERBOSE).SILENT:
 
 CXXC = g++
-CFLAGS = -std=c++11 -lpthread -g -ggdb -gdwarf-2
+CFLAGS = -std=c++11 -lpthread -lm -g -ggdb -gdwarf-2
 SERIAL = ep2-serial
 CONC = ep2-conc
+
+HUGE = 5000
 
 all: compile
 
 compile: $(SERIAL).cpp
 	$(CXXC) $(CFLAGS) $(SERIAL).cpp -o $(SERIAL).out
+	$(CXXC) $(CFLAGS) $(CONC).cpp -o $(CONC).out
 
 test: test_inputs_gen test_outputs_gen compile
 	@./$(SERIAL).out 3 3 1 1 ocean < test1 > r
@@ -17,6 +20,17 @@ test: test_inputs_gen test_outputs_gen compile
 	@-diff r test2_r
 	@./$(SERIAL).out 10 10 5 2 ocean < test3 > r
 	@-diff r test3_r
+
+	@./$(CONC).out 3 3 1 1 ocean < test1 > r
+	@-diff r test1_r
+	@./$(CONC).out 4 4 2 4 ocean < test2 > r
+	@-diff r test2_r
+	@./$(CONC).out 10 10 5 2 ocean < test3 > r
+	@-diff r test3_r
+
+test_huge: compile test_huge_input_gen
+	@./$(SERIAL).out $(HUGE) $(HUGE) 5 2 time < test_huge
+
 
 test_inputs_gen:
 	@ printf "5\n5\n5\n5\n5\n9\n5\n5\n5\n" > test1
@@ -45,3 +59,6 @@ test_outputs_gen:
 	@ printf "6\t6\t6\t6\t6\t6\t6\t6\t6\t6\n" >> test3_r
 	@ printf "6\t6\t6\t6\t6\t6\t6\t6\t6\t6\n" >> test3_r
 	@ printf "6\t6\t6\t6\t6\t6\t6\t6\t6\t6\n" >> test3_r
+
+test_huge_input_gen:
+	@ perl huge_gen.pl $(HUGE)
