@@ -2,18 +2,20 @@
 
 CXXC = g++
 CFLAGS = -std=c++11 -lpthread -g -ggdb -gdwarf-2
+SERIAL = ep2-serial
+CONC = ep2-conc
 
 all: compile
 
-compile: ep2.cpp
-	$(CXXC) $(CFLAGS) ep2.cpp -o ep2.out
+compile: $(SERIAL).cpp
+	$(CXXC) $(CFLAGS) $(SERIAL).cpp -o $(SERIAL).out
 
 test: test_inputs_gen test_outputs_gen compile
-	@./ep2.out 3 3 1 1 ocean < test1 > r
+	@./$(SERIAL).out 3 3 1 1 ocean < test1 > r
 	@-diff r test1_r
-	@./ep2.out 4 4 2 4 ocean < test2 > r
+	@./$(SERIAL).out 4 4 2 4 ocean < test2 > r
 	@-diff r test2_r
-	@./ep2.out 10 10 5 2 ocean < test3 > r
+	@./$(SERIAL).out 10 10 5 2 ocean < test3 > r
 	@-diff r test3_r
 
 test_inputs_gen:
