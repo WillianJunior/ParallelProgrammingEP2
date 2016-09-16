@@ -29,7 +29,10 @@ test: test_inputs_gen test_outputs_gen compile
 	@-diff r test3_r
 
 test_huge: compile test_huge_input_gen
+	@ echo "serial: "
 	@./$(SERIAL).out $(HUGE) $(HUGE) 5 2 time < test_huge
+	@ echo "concurrent: "
+	@./$(CONC).out $(HUGE) $(HUGE) 5 2 time < test_huge
 
 
 test_inputs_gen:
