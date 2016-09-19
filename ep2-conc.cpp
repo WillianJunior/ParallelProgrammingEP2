@@ -202,7 +202,10 @@ int main(int argc, char const *argv[]) {
 		__time_t time = ((endT.tv_sec*1000000+endT.tv_usec)-
 			(beginT.tv_sec*1000000+beginT.tv_usec));
 
-		cout << time << endl;
+		cout << time;
+		#ifndef NO_NEW_LINE
+		cout << endl;
+		#endif
 	}
 
 	return 0;
